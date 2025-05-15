@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneDrive Notes Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .notes-container {
+      width: 90%;
+      max-width: 800px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background-color: #0078d4;
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.5em;
+    }
+
+    .back-button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      cursor: pointer;
+      margin-right: 10px;
+      padding: 0;
+    }
+
+    .folders-list {
+      padding: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .folder {
+      padding: 10px;
+      margin: 5px 0;
+      background: #f0f4f8;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .folder:hover {
+      background: #e0e7ef;
+    }
+
+    .notes {
+      padding: 15px;
+    }
+
+    .note {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      background: #f9f9f9;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .note h4 {
+      margin: 0 0 5px 0;
+      font-size: 1.1em;
+      color: #0078d4;
+    }
+
+    .note p {
+      margin: 0;
+      font-size: 0.9em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="notes-container">
+    <div class="header">
+      <button class="back-button" onclick="goBack()">&#8592;</button>
+      <span>OneDrive Notes Viewer</span>
+    </div>
+    <div class="folders-list" id="foldersList"></div>
+    <div class="notes" id="notes"></div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.location.href = 'index.html'; // Navigate back to the index page
+    }
+
+    const foldersList = document.getElementById('foldersList');
+    const notes = document.getElementById('notes');
+
+    // Mock data for folders and notes
+    const mockFolders = [
+      { id: 1, name: "Work" },
+      { id: 2, name: "Personal" },
+      { id: 3, name: "Projects" },
+    ];
+
+    const mockNotes = {
+      1: [
+        { title: "Meeting Notes", content: "Discuss project roadmap." },
+        { title: "Report Draft", content: "Prepare Q2 report draft." },
+      ],
+      2: [
+        { title: "Shopping List", content: "Milk, eggs, bread, and vegetables." },
+        { title: "Vacation Plan", content: "Book flights and hotels." },
+      ],
+      3: [
+        { title: "App Ideas", content: "Brainstorm ideas for new app." },
+        { title: "Code Review Notes", content: "Review PR #45." },
+      ],
+    };
+
+    function renderFolders() {
+      foldersList.innerHTML = '';
+      mockFolders.forEach((folder) => {
+        const folderElement = document.createElement('div');
+        folderElement.className = 'folder';
+        folderElement.textContent = folder.name;
+        folderElement.addEventListener('click', () => renderNotes(folder.id));
+        foldersList.appendChild(folderElement);
+      });
+    }
+
+    function renderNotes(folderId) {
+      notes.innerHTML = '';
+      const folderNotes = mockNotes[folderId] || [];
+
+      folderNotes.forEach((note) => {
+        const noteElement = document.createElement('div');
+        noteElement.className = 'note';
+        noteElement.innerHTML = `
+          <h4>${note.title}</h4>
+          <p>${note.content}</p>
+        `;
+        notes.appendChild(noteElement);
+      });
+    }
+
+    // Initialize
+    renderFolders();
+  </script>
+</body>
+</html>

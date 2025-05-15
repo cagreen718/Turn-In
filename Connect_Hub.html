@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #3b3f51;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h1 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar nav ul li a {
+            text-decoration: none;
+            color: #bbb;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .sidebar nav ul li a.active,
+        .sidebar nav ul li a:hover {
+            color: #fff;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            overflow-y: auto;
+        }
+
+        .main-content header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .main-content header h2 {
+            margin-left: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .back-button {
+            background-color: #3b3f51;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #52576e;
+        }
+
+        .feature {
+            margin-bottom: 30px;
+        }
+
+        .feature h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .button {
+            background-color: #3b3f51;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #52576e;
+        }
+
+        .list {
+            margin-top: 10px;
+        }
+
+        .list-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        function goBack() {
+            window.location.href = 'index.html'; // Redirect to the index.html page
+        }
+
+        const apiBaseUrl = "https://api.softeria.com/mcp"; // Replace with actual MCP API base URL
+
+        // Other existing JavaScript functions
+        async function fetchMeetings() {
+            const response = await fetch(`${apiBaseUrl}/meetings`);
+            const meetings = await response.json();
+            const meetingList = document.getElementById("meeting-list");
+
+            meetingList.innerHTML = "";
+            meetings.forEach(meeting => {
+                const item = document.createElement("div");
+                item.className = "list-item";
+                item.innerHTML = `
+                    <h4>${meeting.title}</h4>
+                    <p>${meeting.date} at ${meeting.time}</p>
+                    <p>${meeting.description}</p>
+                `;
+                meetingList.appendChild(item);
+            });
+        }
+
+        async function createMeeting() {
+            const title = prompt("Enter meeting title:");
+            const date = prompt("Enter meeting date (YYYY-MM-DD):");
+            const time = prompt("Enter meeting time (HH:MM):");
+
+            await fetch(`${apiBaseUrl}/meetings`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ title, date, time })
+            });
+
+            fetchMeetings();
+        }
+
+        async function fetchNotes() {
+            const response = await fetch(`${apiBaseUrl}/notes`);
+            const notes = await response.json();
+            const notesList = document.getElementById("notes-list");
+
+            notesList.innerHTML = "";
+            notes.forEach(note => {
+                const item = document.createElement("div");
+                item.className = "list-item";
+                item.innerHTML = `<p>${note.content}</p>`;
+                notesList.appendChild(item);
+            });
+        }
+
+        async function addNote() {
+            const content = prompt("Enter note content:");
+
+            await fetch(`${apiBaseUrl}/notes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ content })
+            });
+
+            fetchNotes();
+        }
+
+        async function fetchAgendas() {
+            const response = await fetch(`${apiBaseUrl}/agenda`);
+            const agendas = await response.json();
+            const agendaList = document.getElementById("agenda-list");
+
+            agendaList.innerHTML = "";
+            agendas.forEach(agenda => {
+                const item = document.createElement("div");
+                item.className = "list-item";
+                item.innerHTML = `<p>${agenda.content}</p>`;
+                agendaList.appendChild(item);
+            });
+        }
+
+        async function addAgenda() {
+            const content = prompt("Enter agenda content:");
+
+            await fetch(`${apiBaseUrl}/agenda`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ content })
+            });
+
+            fetchAgendas();
+        }
+
+        window.onload = () => {
+            fetchMeetings();
+            fetchNotes();
+            fetchAgendas();
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>Connect Hub</h1>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="Misson.html">Mission</a></li>
+                    <li><a href="Note_Vault.html">Vault</a></li>
+                    <li><a href="Growth.html">Growth</a></li>
+                    <li><a href="Planner.html">Planner</a></li>
+                    <li><a href="Remainders.html">Remainders</a></li>
+                    <li><a href="Connect_Hub.html">Connect Hub</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="main-content">
+            <header>
+                <button class="back-button" onclick="goBack()">&#8592; Back</button>
+                <h2>Welcome to the Connect Hub</h2>
+            </header>
+
+            <div class="feature">
+                <h3>Meeting Scheduler</h3>
+                <button class="button" onclick="createMeeting()">Create Meeting</button>
+                <div id="meeting-list" class="list"></div>
+            </div>
+
+            <div class="feature">
+                <h3>Meeting Notes</h3>
+                <button class="button" onclick="addNote()">Add Note</button>
+                <div id="notes-list" class="list"></div>
+            </div>
+
+            <div class="feature">
+                <h3>Agenda Builder</h3>
+                <button class="button" onclick="addAgenda()">Add Agenda</button>
+                <div id="agenda-list" class="list"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
